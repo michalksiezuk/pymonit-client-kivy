@@ -15,6 +15,7 @@ class Api:
                     return await response.json()
             except aiohttp.ClientConnectorError as error:
                 print('Connection Error', str(error))
+                raise error
 
     def get(self):
         return self._loop.run_until_complete(self._async_get())

@@ -1,3 +1,4 @@
+import aiohttp
 import kivy
 from kivy.app import App as KivyApp
 from kivy.clock import Clock
@@ -121,11 +122,14 @@ class App(FloatLayout):
         )
 
     def update(self, *args):
-        self._vitals = self._api.get()
-        self.cpu_temp.text = format_temp(self._vitals[0]["sensors"][0]["val"])
-        self.cpu_load.text = f"[b]Load [/b] " + format_load(self._vitals[0]["sensors"][1])
-        self.gpu_temp.text = format_temp(self._vitals[1]["sensors"][0]["val"])
-        self.gpu_load.text = f"[b]Load [/b] " + format_load(self._vitals[1]["sensors"][1])
+        try:
+            self._vitals = self._api.get()
+            self.cpu_temp.text = format_temp(self._vitals[0]["sensors"][0]["val"])
+            self.cpu_load.text = f"[b]Load [/b] " + format_load(self._vitals[0]["sensors"][1])
+            self.gpu_temp.text = format_temp(self._vitals[1]["sensors"][0]["val"])
+            self.gpu_load.text = f"[b]Load [/b] " + format_load(self._vitals[1]["sensors"][1])
+        except aiohttp.ClientConnectorError:
+            pass
 
 
 class PymonitClient(KivyApp):
