@@ -6,6 +6,7 @@ from kivy.config import Config
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
+from kivy.utils import rgba
 
 from modules.api import Api
 from modules.utils import format_load, format_name, format_temp
@@ -32,10 +33,11 @@ class Temperature(Label):
         super(Temperature, self).__init__()
 
         self.text = format_temp(0)
-        self.font_size = "110sp"
+        self.font_name = Config.get("theme", "font_temperature")
+        self.font_size = "160sp"
         self.pos_hint = pos_hint
         self.halign = "center"
-        self.color = (.3, .55, 0.689, 1)
+        self.color = rgba(Config.get("theme", "color_main"))
 
 
 class Name(Label):
@@ -43,10 +45,11 @@ class Name(Label):
         super(Name, self).__init__()
 
         self.text = format_name(name)
+        self.font_name = Config.get("theme", "font_info")
         self.font_size = "18sp"
         self.pos_hint = pos_hint
         self.halign = "center"
-        self.color = (.3, .55, 0.689, 1)
+        self.color = rgba(Config.get("theme", "color_main"))
         self.markup = True
 
 
@@ -55,9 +58,10 @@ class Load(Label):
         super(Load, self).__init__()
 
         self.text = f"[b]Load:[/b] 0/0/0"
+        self.font_name = Config.get("theme", "font_info")
         self.font_size = "14sp"
         self.pos_hint = pos_hint
-        self.color = (.3, .55, 0.689, 1)
+        self.color = rgba(Config.get("theme", "color_main"))
         self.markup = True
         self.text_size = (180, None)
 
@@ -66,11 +70,12 @@ class ConnectionInfo(Label):
     def __init__(self, hostname):
         super(ConnectionInfo, self).__init__()
 
-        self.text = f"Connected to: [b]{hostname}[/b]"
+        self.text = f"Connected to:\n[b]{hostname}[/b]"
+        self.font_name = Config.get("theme", "font_info")
         self.font_size = "12sp"
-        self.pos_hint = {"x": 0, "y": -.415}
+        self.pos_hint = {"x": 0, "y": -.43}
         self.halign = "center"
-        self.color = (.3, .55, 0.689, .5)
+        self.color = rgba(Config.get("theme", "color_main"))
         self.markup = True
 
 
@@ -93,28 +98,28 @@ class App(FloatLayout):
         self.add_widget(
             Name(
                 self._vitals[0]["name"],
-                {"x": -.225, "y": .155}
+                {"x": -.195, "y": .185}
             )
         )
 
-        self.cpu_temp = Temperature({"x": -.21, "y": -.0195})
+        self.cpu_temp = Temperature({"x": -.18, "y": -.0195})
         self.add_widget(self.cpu_temp)
 
-        self.cpu_load = Load({"x": -.195, "y": -.175})
+        self.cpu_load = Load({"x": -.165, "y": -.205})
         self.add_widget(self.cpu_load)
 
         # GPU section
         self.add_widget(
             Name(
                 self._vitals[1]["name"],
-                {"x": .225, "y": .155}
+                {"x": .195, "y": .185}
             )
         )
 
-        self.gpu_temp = Temperature({"x": .24, "y": -.0195})
+        self.gpu_temp = Temperature({"x": .21, "y": -.0195})
         self.add_widget(self.gpu_temp)
 
-        self.gpu_load = Load({"x": .255, "y": -.175})
+        self.gpu_load = Load({"x": .225, "y": -.205})
         self.add_widget(self.gpu_load)
 
         self.add_widget(
