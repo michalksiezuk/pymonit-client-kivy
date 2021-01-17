@@ -63,7 +63,7 @@ class Load(Label):
         self.pos_hint = pos_hint
         self.color = rgba(Config.get("theme", "color_main"))
         self.markup = True
-        self.text_size = (180, None)
+        self.text_size = (200, None)
 
 
 class ConnectionInfo(Label):
