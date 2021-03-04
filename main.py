@@ -1,3 +1,5 @@
+import asyncio
+
 import aiohttp
 import kivy
 from kivy.app import App as KivyApp
@@ -11,7 +13,7 @@ from kivy.utils import rgba
 from modules.api import Api
 from modules.utils import format_load, format_name, format_temp
 
-kivy.require("1.11.1")
+kivy.require("2.0.0")
 
 Config.read("config.ini")
 
@@ -133,7 +135,7 @@ class App(FloatLayout):
             self.cpu_load.text = f"[b]Load [/b] " + format_load(self._vitals[0]["sensors"][1])
             self.gpu_temp.text = format_temp(self._vitals[1]["sensors"][0]["val"])
             self.gpu_load.text = f"[b]Load [/b] " + format_load(self._vitals[1]["sensors"][1])
-        except aiohttp.ClientConnectorError:
+        except:
             pass
 
 
