@@ -13,7 +13,7 @@ from kivy.utils import rgba
 from modules.api import Api
 from modules.utils import format_load, format_name, format_temp
 
-kivy.require("2.0.0")
+kivy.require("1.11.1")
 
 Config.read("config.ini")
 
