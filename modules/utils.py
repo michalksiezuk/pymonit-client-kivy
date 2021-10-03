@@ -9,7 +9,7 @@ def format_name(text):
     words = text.split()
     brand = words.pop(0)
     model = " ".join(words)
-    return f"[b]{brand}[/b]\n{model}"
+    return f"[b]{brand}[/b]\n{model.replace('NVIDIA', '')}"
 
 
 def format_temp(value):

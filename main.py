@@ -1,11 +1,9 @@
-import asyncio
-
-import aiohttp
 import kivy
 from kivy.app import App as KivyApp
 from kivy.clock import Clock
 from kivy.config import Config
-from kivy.uix.floatlayout import FloatLayout
+from kivy.core.window import Window
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.utils import rgba
@@ -16,6 +14,11 @@ from modules.utils import format_load, format_name, format_temp
 kivy.require("1.11.1")
 
 Config.read("config.ini")
+
+Window.size = (
+    int(Config.get("graphics", "width")),
+    int(Config.get("graphics", "height"))
+)
 
 
 class Background(Image):
@@ -31,38 +34,39 @@ class Background(Image):
 
 
 class Temperature(Label):
-    def __init__(self, pos_hint):
+    def __init__(self, pos):
         super(Temperature, self).__init__()
 
         self.text = format_temp(0)
         self.font_name = Config.get("theme", "font_temperature")
         self.font_size = "160sp"
-        self.pos_hint = pos_hint
+        self.pos = pos
         self.halign = "center"
         self.color = rgba(Config.get("theme", "color_main"))
 
 
 class Name(Label):
-    def __init__(self, name, pos_hint):
+    def __init__(self, name, pos):
         super(Name, self).__init__()
 
         self.text = format_name(name)
         self.font_name = Config.get("theme", "font_info")
         self.font_size = "18sp"
-        self.pos_hint = pos_hint
+        self.pos = pos
         self.halign = "center"
         self.color = rgba(Config.get("theme", "color_main"))
         self.markup = True
 
 
 class Load(Label):
-    def __init__(self, pos_hint):
+    def __init__(self, pos):
         super(Load, self).__init__()
 
         self.text = f"[b]Load:[/b] 0/0/0"
         self.font_name = Config.get("theme", "font_info")
         self.font_size = "14sp"
-        self.pos_hint = pos_hint
+        self.pos = pos
+        self.halign = "center"
         self.color = rgba(Config.get("theme", "color_main"))
         self.markup = True
         self.text_size = (200, None)
@@ -75,15 +79,17 @@ class ConnectionInfo(Label):
         self.text = f"Connected to:\n[b]{hostname}[/b]"
         self.font_name = Config.get("theme", "font_info")
         self.font_size = "12sp"
-        self.pos_hint = {"x": 0, "y": -.43}
+        self.pos = (0, -377)
         self.halign = "center"
         self.color = rgba(Config.get("theme", "color_main"))
         self.markup = True
 
 
-class App(FloatLayout):
+class App(RelativeLayout):
     def __init__(self):
         super(App, self).__init__()
+
+        self.size = (480, 800)
 
         self._api = Api(
             Config.get("server", "hostname"),
@@ -100,28 +106,28 @@ class App(FloatLayout):
         self.add_widget(
             Name(
                 self._vitals[0]["name"],
-                {"x": -.195, "y": .185}
+                (0, 240)
             )
         )
 
-        self.cpu_temp = Temperature({"x": -.18, "y": -.0195})
+        self.cpu_temp = Temperature((0, 140))
         self.add_widget(self.cpu_temp)
 
-        self.cpu_load = Load({"x": -.165, "y": -.205})
+        self.cpu_load = Load((0, 50))
         self.add_widget(self.cpu_load)
 
         # GPU section
         self.add_widget(
             Name(
                 self._vitals[1]["name"],
-                {"x": .195, "y": .185}
+                (0, -60)
             )
         )
 
-        self.gpu_temp = Temperature({"x": .21, "y": -.0195})
+        self.gpu_temp = Temperature((0, -160))
         self.add_widget(self.gpu_temp)
 
-        self.gpu_load = Load({"x": .225, "y": -.205})
+        self.gpu_load = Load((0, -250))
         self.add_widget(self.gpu_load)
 
         self.add_widget(
